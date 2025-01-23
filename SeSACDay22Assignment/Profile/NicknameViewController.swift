@@ -10,15 +10,37 @@ import SnapKit
 
 class NicknameViewController: UIViewController {
 
-    let textField = UITextField()
+    private let textField = UITextField()
+    var sendContents: ((String) -> Void)?
+    var receiveContents: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        saveValue()
+    }
+    
     @objc func okButtonTapped() {
-        print(#function)
+        saveValue()
+        navigationController?.popViewController(animated: true)
+    }
+    
+    private func saveValue() {
+        guard let text = textField.text else { return }
+        
+        let trimmingText = text.trimmingCharacters(in: .whitespaces)
+        if trimmingText.isEmpty {
+            showAlert(title: "닉네임 저장 실패!", message: "닉네임은 최소 한글자 이상 입력해주세요.", button: "확인") {
+                self.dismiss(animated: true)
+            }
+        } else {
+            sendContents?(trimmingText)
+        }
     }
     
     func configureView() {
@@ -31,5 +53,6 @@ class NicknameViewController: UIViewController {
             make.width.equalTo(view.safeAreaLayoutGuide).inset(24)
         }
         textField.placeholder = "닉네임을 입력해주세요"
+        textField.text = receiveContents ?? ""
     }
 }

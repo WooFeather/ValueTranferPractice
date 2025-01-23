@@ -31,6 +31,10 @@ class ProfileViewController: UIViewController {
     
     @objc private func nicknameButtonTapped() {
         let vc = NicknameViewController()
+        vc.sendContents = { value in
+            self.nicknameLabel.text = value
+        }
+        vc.receiveContents = nicknameLabel.text
         navigationController?.pushViewController(vc, animated: true)
     }
     
