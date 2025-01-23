@@ -23,13 +23,30 @@ class ProfileViewController: UIViewController {
         configureView()
     }
 
-    @objc func okButtonTapped() {
-        print(#function)
+    @objc func resignButtonTapped() {
+        showAlert(title: "탈퇴하시겠습니까?", message: "모든 회원정보가 삭제되고\n회원가입화면으로 이동합니다.", button: "회원탈퇴", isCancelButton: true, buttonStyle: .destructive) {
+            self.changeRootViewController(vc: OnboardingViewController(), isSigned: false)
+        }
+    }
+    
+    @objc private func nicknameButtonTapped() {
+        let vc = NicknameViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func birthdayButtonTapped() {
+        let vc = BirthdayViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func levelButtonTapped() {
+        let vc = LevelViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func configureView() {
         navigationItem.title = "프로필 화면"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "탈퇴하기", style: .plain, target: self, action: #selector(okButtonTapped))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "탈퇴하기", style: .plain, target: self, action: #selector(resignButtonTapped))
         view.backgroundColor = .white
         
         view.addSubview(nicknameButton)
@@ -39,6 +56,10 @@ class ProfileViewController: UIViewController {
         view.addSubview(nicknameLabel)
         view.addSubview(birthdayLabel)
         view.addSubview(levelLabel)
+        
+        nicknameButton.addTarget(self, action: #selector(nicknameButtonTapped), for: .touchUpInside)
+        birthdayButton.addTarget(self, action: #selector(birthdayButtonTapped), for: .touchUpInside)
+        levelButton.addTarget(self, action: #selector(levelButtonTapped), for: .touchUpInside)
         
         nicknameButton.snp.makeConstraints { make in
             make.leading.top.equalTo(view.safeAreaLayoutGuide).inset(24)

@@ -14,17 +14,27 @@ class OnboardingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        UserDefaultsManager.shared.isSigned = false
+        
         view.backgroundColor = .darkGray
         view.addSubview(button)
+        
         button.snp.makeConstraints { make in
             make.bottom.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(24)
             make.height.equalTo(50)
         }
+        
         button.layer.cornerRadius = 25
         button.backgroundColor = .white
         button.setTitleColor(.darkGray, for: .normal)
         button.setTitle("시작하기", for: .normal)
+        
+        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
     
- 
+    @objc func buttonTapped() {
+        let vc = UINavigationController(rootViewController: ProfileViewController())
+        changeRootViewController(vc: vc, isSigned: true)
+    }
 }
