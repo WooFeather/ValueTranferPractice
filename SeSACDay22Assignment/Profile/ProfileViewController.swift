@@ -21,6 +21,7 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
+        receiveLevel()
     }
 
     @objc func resignButtonTapped() {
@@ -47,7 +48,25 @@ class ProfileViewController: UIViewController {
     
     @objc private func levelButtonTapped() {
         let vc = LevelViewController()
+        vc.receiveContents = levelLabel.text
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func levelReceivedNotification(value: NSNotification) {
+        if let level = value.userInfo!["level"] as? String {
+            levelLabel.text = level
+        } else {
+            levelLabel.text = "NO LEVEL"
+        }
+    }
+    
+    private func receiveLevel() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(levelReceivedNotification),
+            name: NSNotification.Name("LevelReceived"),
+            object: nil
+        )
     }
     
     func configureView() {
