@@ -18,6 +18,8 @@ class ProfileViewController: UIViewController {
     let birthdayLabel = UILabel()
     let levelLabel = UILabel()
     
+    private let saveButton = PointButton(title: "저장하기")
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
@@ -26,6 +28,10 @@ class ProfileViewController: UIViewController {
 
     @objc func resignButtonTapped() {
         showAlert(title: "탈퇴하시겠습니까?", message: "모든 회원정보가 삭제되고\n회원가입화면으로 이동합니다.", button: "회원탈퇴", isCancelButton: true, buttonStyle: .destructive) {
+            // UserDefaults 값 삭제
+            for key in UserDefaults.standard.dictionaryRepresentation().keys {
+                UserDefaults.standard.removeObject(forKey: key.description)
+            }
             self.changeRootViewController(vc: OnboardingViewController(), isSigned: false)
         }
     }
@@ -50,6 +56,15 @@ class ProfileViewController: UIViewController {
         let vc = LevelViewController()
         vc.receiveContents = levelLabel.text
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func saveButtonTapped() {
+        UserDefaultsManager.shared.nickname = nicknameLabel.text ?? "NO NAME"
+        UserDefaultsManager.shared.birthday = birthdayLabel.text ?? "NO DATE"
+        UserDefaultsManager.shared.level = levelLabel.text ?? "NO LEVEL"
+        showAlert(title: "저장성공🥰", message: "성공적으로 저장되었습니다.", button: "확인") {
+            self.dismiss(animated: true)
+        }
     }
     
     @objc private func levelReceivedNotification(value: NSNotification) {
@@ -82,9 +97,12 @@ class ProfileViewController: UIViewController {
         view.addSubview(birthdayLabel)
         view.addSubview(levelLabel)
         
+        view.addSubview(saveButton)
+        
         nicknameButton.addTarget(self, action: #selector(nicknameButtonTapped), for: .touchUpInside)
         birthdayButton.addTarget(self, action: #selector(birthdayButtonTapped), for: .touchUpInside)
         levelButton.addTarget(self, action: #selector(levelButtonTapped), for: .touchUpInside)
+        saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         
         nicknameButton.snp.makeConstraints { make in
             make.leading.top.equalTo(view.safeAreaLayoutGuide).inset(24)
@@ -127,7 +145,11 @@ class ProfileViewController: UIViewController {
             make.height.equalTo(50)
         }
 
-        
+        saveButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-24)
+            make.horizontalEdges.equalToSuperview().inset(24)
+            make.height.equalTo(50)
+        }
         
         nicknameButton.setTitleColor(.black, for: .normal)
         birthdayButton.setTitleColor(.black, for: .normal)
@@ -137,15 +159,15 @@ class ProfileViewController: UIViewController {
         birthdayButton.setTitle("생일", for: .normal)
         levelButton.setTitle("레벨", for: .normal)
 
-        nicknameLabel.text = "NO NAME"
+        nicknameLabel.text = UserDefaultsManager.shared.nickname
         nicknameLabel.textColor = .lightGray
         nicknameLabel.textAlignment = .right
         
-        birthdayLabel.text = "NO DATE"
+        birthdayLabel.text = UserDefaultsManager.shared.birthday
         birthdayLabel.textColor = .lightGray
         birthdayLabel.textAlignment = .right
         
-        levelLabel.text = "NO LEVEL"
+        levelLabel.text = UserDefaultsManager.shared.level
         levelLabel.textColor = .lightGray
         levelLabel.textAlignment = .right
     }

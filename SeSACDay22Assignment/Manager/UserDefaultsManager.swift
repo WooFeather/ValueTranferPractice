@@ -19,4 +19,31 @@ class UserDefaultsManager {
             UserDefaults.standard.set(newValue, forKey: "isSigned")
         }
     }
+    
+    var nickname: String {
+        get {
+            UserDefaults.standard.string(forKey: "nickname") ?? "NO NAME"
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "nickname")
+        }
+    }
+    
+    var birthday: String {
+        get {
+            UserDefaults.standard.string(forKey: "birthday") ?? "NO DATE"
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "birthday")
+        }
+    }
+    
+    var level: String {
+        get {
+            UserDefaults.standard.string(forKey: "level") ?? "NO LEVEL"
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "level")
+        }
+    }
 }
