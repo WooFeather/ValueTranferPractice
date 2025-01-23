@@ -18,12 +18,28 @@ class ProfileViewController: UIViewController {
     let birthdayLabel = UILabel()
     let levelLabel = UILabel()
     
-    private let saveButton = PointButton(title: "저장하기")
+    static var isNickname = false
+    static var isBirthday = false
+    static var isLevel = false
+    
+    private let saveButton = UIButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
         receiveLevel()
+        saveButtonReset()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print(#function)
+        
+        if ProfileViewController.isNickname == false || ProfileViewController.isBirthday == false || ProfileViewController.isLevel == false {
+            navigationItem.leftBarButtonItem?.isEnabled = false
+        } else {
+            navigationItem.leftBarButtonItem?.isEnabled = true
+        }
     }
 
     @objc func resignButtonTapped() {
@@ -84,9 +100,17 @@ class ProfileViewController: UIViewController {
         )
     }
     
-    func configureView() {
+    private func saveButtonReset() {
+        ProfileViewController.isNickname = false
+        ProfileViewController.isBirthday = false
+        ProfileViewController.isLevel = false
+    }
+    
+    private func configureView() {
         navigationItem.title = "프로필 화면"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "탈퇴하기", style: .plain, target: self, action: #selector(resignButtonTapped))
+        navigationItem.rightBarButtonItem?.tintColor = .red
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "저장하기", style: .plain, target: self, action: #selector(saveButtonTapped))
         view.backgroundColor = .white
         
         view.addSubview(nicknameButton)
@@ -96,8 +120,6 @@ class ProfileViewController: UIViewController {
         view.addSubview(nicknameLabel)
         view.addSubview(birthdayLabel)
         view.addSubview(levelLabel)
-        
-        view.addSubview(saveButton)
         
         nicknameButton.addTarget(self, action: #selector(nicknameButtonTapped), for: .touchUpInside)
         birthdayButton.addTarget(self, action: #selector(birthdayButtonTapped), for: .touchUpInside)
@@ -142,12 +164,6 @@ class ProfileViewController: UIViewController {
             make.top.equalTo(birthdayLabel.snp.bottom).offset(24)
             make.trailing.equalTo(view.safeAreaLayoutGuide).inset(24)
             make.leading.equalTo(levelButton.snp.trailing).offset(24)
-            make.height.equalTo(50)
-        }
-
-        saveButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-24)
-            make.horizontalEdges.equalToSuperview().inset(24)
             make.height.equalTo(50)
         }
         

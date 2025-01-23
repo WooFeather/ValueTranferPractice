@@ -22,11 +22,13 @@ class LevelViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
+        ProfileViewController.isLevel = true
         saveValue()
     }
     
     @objc func okButtonTapped() {
         saveValue()
+        ProfileViewController.isLevel = true
         navigationController?.popViewController(animated: true)
     }
     

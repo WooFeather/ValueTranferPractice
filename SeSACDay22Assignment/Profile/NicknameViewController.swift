@@ -23,10 +23,12 @@ class NicknameViewController: UIViewController {
         super.viewWillDisappear(animated)
         
         saveValue()
+        ProfileViewController.isNickname = true
     }
     
     @objc func okButtonTapped() {
         saveValue()
+        ProfileViewController.isNickname = true
         navigationController?.popViewController(animated: true)
     }
     

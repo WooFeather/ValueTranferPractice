@@ -23,11 +23,13 @@ class BirthdayViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         print(datePicker.date)
+        ProfileViewController.isBirthday = true
         sendContents?.dateReceived(value: datePicker.date.toString())
     }
     
     @objc func okButtonTapped() {
         sendContents?.dateReceived(value: datePicker.date.toString())
+        ProfileViewController.isBirthday = true
         print(datePicker.date)
         navigationController?.popViewController(animated: true)
     }
