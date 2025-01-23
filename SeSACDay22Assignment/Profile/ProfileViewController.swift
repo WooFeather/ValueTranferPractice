@@ -40,6 +40,8 @@ class ProfileViewController: UIViewController {
     
     @objc private func birthdayButtonTapped() {
         let vc = BirthdayViewController()
+        vc.sendContents = self
+        vc.receiveContents = birthdayLabel.text
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -130,4 +132,10 @@ class ProfileViewController: UIViewController {
     }
     
  
+}
+
+extension ProfileViewController: PassDataDelegate {
+    func dateReceived(value: String) {
+        birthdayLabel.text = value
+    }
 }

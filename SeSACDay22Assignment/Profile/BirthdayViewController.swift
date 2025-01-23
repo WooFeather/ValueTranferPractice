@@ -12,13 +12,24 @@ class BirthdayViewController: UIViewController {
 
     let datePicker = UIDatePicker()
     
+    var sendContents: PassDataDelegate?
+    var receiveContents: String?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print(datePicker.date)
+        sendContents?.dateReceived(value: datePicker.date.toString())
+    }
+    
     @objc func okButtonTapped() {
-        print(#function)
+        sendContents?.dateReceived(value: datePicker.date.toString())
+        print(datePicker.date)
+        navigationController?.popViewController(animated: true)
     }
     
     func configureView() {
@@ -31,5 +42,6 @@ class BirthdayViewController: UIViewController {
         }
         datePicker.preferredDatePickerStyle = .wheels
         datePicker.datePickerMode = .date
+        datePicker.date = receiveContents?.toDate() ?? Date()
     }
 }
